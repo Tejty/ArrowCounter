@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.tejty.arrow_counter.ArrowCounter;
+import net.tejty.arrow_counter.util.ProjectileUtils;
 
 import java.util.function.Predicate;
 
@@ -30,21 +31,15 @@ public class ArrowCounterOverlay implements IGuiOverlay {
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
         Player player = Minecraft.getInstance().player;
         assert player != null;
-        ItemStack stack = player.getMainHandItem();
-        // TODO offhand and crossbow
-        if (stack.getItem() instanceof ProjectileWeaponItem weapon) {
-            ItemStack projectile = player.getProjectile(stack);
-            Predicate<ItemStack> predicate = weapon.getAllSupportedProjectiles();
+        ItemStack stack = ProjectileUtils.weaponFromPLayer(player);
+        // TODO offhand
+        // TODO crossbow fireworks
+        if (!stack.isEmpty()) {
+            ItemStack nextProjectile = player.getProjectile(stack);
+            Predicate<ItemStack> supportedProjectiles = ProjectileUtils.weapon(stack).getAllSupportedProjectiles();
 
-            int count = 0;
+            int count = ProjectileUtils.count(player.getInventory(), supportedProjectiles, nextProjectile);
 
-            for(int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-                ItemStack testStack = player.getInventory().getItem(i);
-                if (predicate.test(testStack)) {
-                    // TODO (configurable) only items of the one current type
-                    count += testStack.getCount();
-                }
-            }
             graphics.setColor(1, 1, 1, 0.7F);
             graphics.blit(BACKGROUND, 10, 20, 24, 24, 0, 0, 24, 24, 32, 32);
             graphics.setColor(1, 1, 1, 1);
@@ -52,7 +47,7 @@ public class ArrowCounterOverlay implements IGuiOverlay {
             // TODO creative and infinite enchantment "∞"
             graphics.drawString(Minecraft.getInstance().font, Component.literal(String.valueOf(count)), 20, 40, 0xFFFFFF, true);
 
-            graphics.renderFakeItem(projectile, 14, 24);
+            graphics.renderFakeItem(nextProjectile, 14, 24);
         }
     }
 }
