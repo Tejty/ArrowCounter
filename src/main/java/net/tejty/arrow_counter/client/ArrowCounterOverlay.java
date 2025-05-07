@@ -16,17 +16,21 @@ import net.tejty.arrow_counter.config.ConfiguredValues;
 import net.tejty.arrow_counter.util.ProjectileUtils;
 
 import javax.swing.text.TabExpander;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 @OnlyIn(Dist.CLIENT)
 public class ArrowCounterOverlay implements IGuiOverlay {
-    private static final ResourceLocation BACKGROUND =
-            ResourceLocation.fromNamespaceAndPath(ArrowCounter.MODID, "textures/background.png");
+    private static final HashMap<ConfiguredValues.Style, ResourceLocation> BACKGROUNDS = new HashMap<>();
 
     public static ArrowCounterOverlay HUD_INSTANCE;
 
     public static void init() {
         HUD_INSTANCE = new ArrowCounterOverlay();
+        BACKGROUNDS.put(ConfiguredValues.Style.BLUE, ResourceLocation.fromNamespaceAndPath(ArrowCounter.MODID, "textures/blue.png"));
+        BACKGROUNDS.put(ConfiguredValues.Style.BLACK, ResourceLocation.fromNamespaceAndPath(ArrowCounter.MODID, "textures/black.png"));
+        BACKGROUNDS.put(ConfiguredValues.Style.BAR, ResourceLocation.fromNamespaceAndPath(ArrowCounter.MODID, "textures/bar.png"));
+        BACKGROUNDS.put(ConfiguredValues.Style.SLOT, ResourceLocation.fromNamespaceAndPath(ArrowCounter.MODID, "textures/slot.png"));
     }
 
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
@@ -50,10 +54,13 @@ public class ArrowCounterOverlay implements IGuiOverlay {
         int x = 0;
         int y = 0;
 
+        ConfiguredValues.Style style = ConfiguredValues.getStyle();
+        boolean isUnder = ConfiguredValues.getUnder();
+
         Font font = Minecraft.getInstance().font;
         int textWidth = font.width(text);
 
-        int width = 24;
+        int width = isUnder ? 24 : 28 + textWidth;
         int height = 24;
 
         int offset = 10;
@@ -95,14 +102,23 @@ public class ArrowCounterOverlay implements IGuiOverlay {
             }
         }
 
+        ResourceLocation background = BACKGROUNDS.get(style);
+
         graphics.setColor(1, 1, 1, 0.7F);
-        graphics.blit(BACKGROUND, x, y, width, height, 0, 0, width, height, 32, 32);
+        if (isUnder) {
+            graphics.blit(background, x, y, width, height, 0, 0, width, height, 32, 32);
+        }
+        else {
+            graphics.blit(background, x, y, height / 2, height, 0, 0, height / 2, height, 32, 32);
+            graphics.blit(background, x + width - height / 2, y, height / 2, height, (int)(height / 2), 0, height / 2, height, 32, 32);
+            graphics.blit(background, x + height / 2, y, width - height, height, (int)(height / 4), 0, height / 2, height, 32, 32);
+        }
         graphics.setColor(1, 1, 1, 1);
 
         // TODO barrier when no ammo
-        graphics.renderItem(icon, x + 4, y + 4);
+        graphics.renderItem(icon, x + 3, y + 3);
 
         // TODO creative and infinite enchantment "∞"
-        graphics.drawString(font, text, x + width / 2 - textWidth / 2, y + 19, 0xFFFFFF, true);
+        graphics.drawString(font, text, x + (isUnder ? width / 2 - textWidth / 2 : height - 2), y + (isUnder ? 19 : (height - font.lineHeight) / 2), 0xFFFFFF, true);
     }
 }
