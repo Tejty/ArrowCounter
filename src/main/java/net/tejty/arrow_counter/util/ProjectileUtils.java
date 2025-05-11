@@ -2,6 +2,8 @@ package net.tejty.arrow_counter.util;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.tejty.arrow_counter.config.ConfiguredValues;
@@ -23,6 +25,24 @@ public class ProjectileUtils {
     public static @Nullable ProjectileWeaponItem weapon(ItemStack stack) {
         if (stack.getItem() instanceof ProjectileWeaponItem weapon) {
             return weapon;
+        }
+        return null;
+    }
+
+    public static boolean isInfinite(ItemStack nextProjectile, ItemStack weapon, Player player) {
+        if (nextProjectile.getItem() instanceof ArrowItem arrow) {
+            ProjectileWeaponItem weapon_item = weapon(weapon);
+            if (weapon_item != null) {
+                return arrow.isInfinite(nextProjectile, weapon, player);
+            }
+        }
+        return false;
+    }
+
+    public static Predicate<ItemStack> getAllSupportedProjectiles(ItemStack weapon) {
+        ProjectileWeaponItem weapon_item = weapon(weapon);
+        if (weapon_item != null) {
+            return weapon_item.getAllSupportedProjectiles();
         }
         return null;
     }

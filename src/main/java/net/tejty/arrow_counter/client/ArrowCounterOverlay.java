@@ -43,12 +43,12 @@ public class ArrowCounterOverlay implements IGuiOverlay {
 
         if (!weapon.isEmpty()) {
             ItemStack nextProjectile = player.getProjectile(weapon);
-            Predicate<ItemStack> supportedProjectiles = ProjectileUtils.weapon(weapon).getAllSupportedProjectiles();
+            Predicate<ItemStack> supportedProjectiles = ProjectileUtils.getAllSupportedProjectiles(weapon);
 
             int count = ProjectileUtils.count(player.getInventory(), supportedProjectiles, nextProjectile);
 
             Component text = Component.literal(String.valueOf(count));
-            boolean infinite = weapon.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) != 0 || player.isCreative();
+            boolean infinite = ProjectileUtils.isInfinite(nextProjectile, weapon, player) || player.isCreative();
             drawOverlay(graphics, screenWidth, screenHeight, text, nextProjectile, infinite);
         }
     }
