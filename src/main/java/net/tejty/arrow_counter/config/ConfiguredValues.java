@@ -38,4 +38,8 @@ public class ConfiguredValues {
     public static int getOffset() {
         return ArrowCounterClientConfigs.OFFSET.get();
     }
+
+    public static boolean getStrictCheck() {
+        return ArrowCounterClientConfigs.STRICT_CHECK.get();
+    }
 }

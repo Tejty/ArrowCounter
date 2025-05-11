@@ -4,6 +4,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
+import net.tejty.arrow_counter.config.ConfiguredValues;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
@@ -31,8 +32,7 @@ public class ProjectileUtils {
 
         for(int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack testStack = inventory.getItem(i);
-            if (supportedProjectiles.test(testStack) || testStack.is(nextProjectile.getItem())) {
-                // TODO (configurable) only items of the one current type
+            if ((((!ConfiguredValues.getStrictCheck()) && supportedProjectiles.test(testStack))) || testStack.is(nextProjectile.getItem())) {
                 count += testStack.getCount();
             }
         }

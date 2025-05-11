@@ -129,7 +129,6 @@ public class ArrowCounterOverlay implements IGuiOverlay {
 
         graphics.renderItem(icon, x + 3, y + 3);
 
-        // TODO creative and infinite enchantment "∞"
         graphics.drawString(font, text, x + (isUnder ? width / 2 - textWidth / 2 : height - 2), y + (isUnder ? 20 : (height - font.lineHeight) / 2), 0xFFFFFF, true);
     }
 }

@@ -11,6 +11,7 @@ public class ArrowCounterClientConfigs {
     public static final ForgeConfigSpec.BooleanValue UNDER;
     public static final ForgeConfigSpec.DoubleValue OPACITY;
     public static final ForgeConfigSpec.IntValue OFFSET;
+    public static final ForgeConfigSpec.BooleanValue STRICT_CHECK;
 
     static {
         BUILDER.push("Config for ArrowCounter");
@@ -29,6 +30,9 @@ public class ArrowCounterClientConfigs {
 
         OFFSET = BUILDER.comment("The offset of the counter from edges")
                 .defineInRange("offset", 10, 0, 30);
+
+        STRICT_CHECK = BUILDER.comment("If true, only projectiles of the same item will count")
+                .define("strict_check", false);
 
         BUILDER.pop();
         SPEC = BUILDER.build();
