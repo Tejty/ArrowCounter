@@ -20,14 +20,22 @@ public class ConfiguredValues {
     }
 
     public static Position getPosition() {
-        return Position.TOP_LEFT;
+        return ArrowCounterClientConfigs.POSITION.get();
     }
 
     public static Style getStyle() {
-        return Style.SLOT;
+        return ArrowCounterClientConfigs.STYLE.get();
     }
 
     public static boolean getUnder() {
-        return false;
+        return ArrowCounterClientConfigs.UNDER.get();
+    }
+
+    public static float getBackgroundOpacity() {
+        return ArrowCounterClientConfigs.OPACITY.get().floatValue();
+    }
+
+    public static int getOffset() {
+        return ArrowCounterClientConfigs.OFFSET.get();
     }
 }

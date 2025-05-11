@@ -12,10 +12,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.tejty.arrow_counter.ArrowCounter;
+import net.tejty.arrow_counter.config.ArrowCounterClientConfigs;
 import net.tejty.arrow_counter.config.ConfiguredValues;
 import net.tejty.arrow_counter.util.ProjectileUtils;
 
-import javax.swing.text.TabExpander;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
@@ -63,7 +63,7 @@ public class ArrowCounterOverlay implements IGuiOverlay {
         int width = isUnder ? 24 : 28 + textWidth;
         int height = 24;
 
-        int offset = 10;
+        int offset = ConfiguredValues.getOffset();
 
         int hotbarWidth = 182;
 
@@ -104,7 +104,7 @@ public class ArrowCounterOverlay implements IGuiOverlay {
 
         ResourceLocation background = BACKGROUNDS.get(style);
 
-        graphics.setColor(1, 1, 1, 0.7F);
+        graphics.setColor(1, 1, 1, ConfiguredValues.getBackgroundOpacity());
         if (isUnder) {
             graphics.blit(background, x, y, width, height, 0, 0, width, height, 32, 32);
         }
@@ -119,6 +119,6 @@ public class ArrowCounterOverlay implements IGuiOverlay {
         graphics.renderItem(icon, x + 3, y + 3);
 
         // TODO creative and infinite enchantment "∞"
-        graphics.drawString(font, text, x + (isUnder ? width / 2 - textWidth / 2 : height - 2), y + (isUnder ? 19 : (height - font.lineHeight) / 2), 0xFFFFFF, true);
+        graphics.drawString(font, text, x + (isUnder ? width / 2 - textWidth / 2 : height - 2), y + (isUnder ? 20 : (height - font.lineHeight) / 2), 0xFFFFFF, true);
     }
 }
