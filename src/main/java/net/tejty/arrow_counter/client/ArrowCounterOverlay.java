@@ -1,5 +1,6 @@
 package net.tejty.arrow_counter.client;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -7,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -45,11 +48,20 @@ public class ArrowCounterOverlay implements IGuiOverlay {
             int count = ProjectileUtils.count(player.getInventory(), supportedProjectiles, nextProjectile);
 
             Component text = Component.literal(String.valueOf(count));
-            drawOverlay(graphics, screenWidth, screenHeight, text, nextProjectile);
+            boolean infinite = weapon.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) != 0 || player.isCreative();
+            drawOverlay(graphics, screenWidth, screenHeight, text, nextProjectile, infinite);
         }
     }
 
-    private void drawOverlay(GuiGraphics graphics, int screenWidth, int screenHeight, Component text, ItemStack icon) {
+    private void drawOverlay(GuiGraphics graphics, int screenWidth, int screenHeight, Component text, ItemStack icon, boolean infinite) {
+        if (infinite) {
+            text = Component.literal("∞").withStyle(ChatFormatting.LIGHT_PURPLE);
+        }
+        if (icon.isEmpty()) {
+            icon = new ItemStack(Items.BARRIER);
+            text = Component.empty();
+        }
+
         ConfiguredValues.Position pos = ConfiguredValues.getPosition();
         int x = 0;
         int y = 0;
@@ -115,7 +127,6 @@ public class ArrowCounterOverlay implements IGuiOverlay {
         }
         graphics.setColor(1, 1, 1, 1);
 
-        // TODO barrier when no ammo
         graphics.renderItem(icon, x + 3, y + 3);
 
         // TODO creative and infinite enchantment "∞"
