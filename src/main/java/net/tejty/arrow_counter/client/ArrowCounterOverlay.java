@@ -72,7 +72,7 @@ public class ArrowCounterOverlay implements IGuiOverlay {
         Font font = Minecraft.getInstance().font;
         int textWidth = font.width(text);
 
-        int width = isUnder ? 24 : 28 + textWidth;
+        int width = isUnder ? 24 : (textWidth == 0 ? 24 : 28) + textWidth;
         int height = 24;
 
         int offset = ConfiguredValues.getOffset();
